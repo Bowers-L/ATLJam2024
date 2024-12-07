@@ -8,6 +8,8 @@ public class Bullet : MonoBehaviour
     [SerializeField] private bool isFromPlayer;
     [SerializeField] private int damage;
 
+    [SerializeField] private SpriteRenderer fill;
+
     private Rigidbody2D rb;
     private float acceleration;
 
@@ -39,6 +41,11 @@ public class Bullet : MonoBehaviour
         rb.velocity = rb.velocity.normalized * (rb.velocity.magnitude + acceleration * Time.deltaTime);
     }
 
+    public void SetColor(Color color)
+    {
+        fill.color = color;
+    }
+
     private void OnTriggerEnter2D(Collider2D collider)
     {
         if (collider.GetComponentInParent<Bullet>() != null)
@@ -46,6 +53,8 @@ public class Bullet : MonoBehaviour
             //Don't do anything on bullet-bullet collisions.
             return;
         }
+
+        Debug.Log($"Bullet Collided: {collider}");
 
         PlayerController player = collider.GetComponentInParent<PlayerController>();
         EnemyController enemy = collider.GetComponentInParent<EnemyController>();
@@ -63,10 +72,10 @@ public class Bullet : MonoBehaviour
             Destroy(this.gameObject);
         } else
         {
-            //if (enemy != null)
-            //{
-            //    return;
-            //}
+            if (enemy != null)
+            {
+                return;
+            }
 
             if (player != null)
             {
