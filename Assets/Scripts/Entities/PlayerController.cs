@@ -14,9 +14,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private bool inputEnabled;
     [SerializeField] private InputActionReference slowMode;
     [SerializeField] private InputActionReference move;
-    [SerializeField] private InputActionReference touchMove;
     [SerializeField] private InputActionReference shoot;
-    [SerializeField] private InputActionReference isTouching;
 
     [Header("Player")]
     [SerializeField] private float baseSpeed = 10f;
@@ -62,9 +60,7 @@ public class PlayerController : MonoBehaviour
         ResetData();
         slowMode.action.Enable();
         move.action.Enable();
-        touchMove.action.Enable();
         shoot.action.Enable();
-        isTouching.action.Enable();
     }
 
     public void ResetData()
@@ -115,16 +111,7 @@ public class PlayerController : MonoBehaviour
         //float xVel, yVel;
         Vector2 moveInput;
 
-        if (isTouching.action.IsPressed())
-        {
-            Vector2 position = touchMove.action.ReadValue<Vector2>();
-            Vector3 worldPos = Camera.main.ScreenToWorldPoint(position);
-
-            moveInput = ((Vector2)worldPos - (Vector2)transform.position);
-
-            //Set a threshold for when the player should move vs. stay still
-            moveInput = moveInput.magnitude > 0.05f ? moveInput.normalized : Vector2.zero;
-        } else if (move.action.IsInProgress())
+        if (move.action.IsInProgress())
         {
             moveInput = move.action.ReadValue<Vector2>().normalized;
         }
