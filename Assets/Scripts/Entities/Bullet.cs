@@ -6,6 +6,7 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     [SerializeField] private bool isFromPlayer;
+    [SerializeField] private int damage;
 
     private Rigidbody2D rb;
     private float acceleration;
@@ -31,12 +32,15 @@ public class Bullet : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
+    }
+
+    private void FixedUpdate()
+    {
         rb.velocity = rb.velocity.normalized * (rb.velocity.magnitude + acceleration * Time.deltaTime);
     }
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        Debug.Log($"Collision With: {collider}");
         if (collider.GetComponentInParent<Bullet>() != null)
         {
             //Don't do anything on bullet-bullet collisions.
@@ -44,7 +48,7 @@ public class Bullet : MonoBehaviour
         }
 
         PlayerController player = collider.GetComponentInParent<PlayerController>();
-        //Enemy enemy = collision.collider.GetComponentInParent<Enemy>();
+        EnemyController enemy = collider.GetComponentInParent<EnemyController>();
         if (isFromPlayer)
         {
             if (player != null)
@@ -52,10 +56,10 @@ public class Bullet : MonoBehaviour
                 return;
             }
 
-            //if (enemy != null)
-            //{
-            //    enemy.Damage();
-            //}
+            if (enemy != null)
+            {
+                enemy.Damage(damage);
+            }
             Destroy(this.gameObject);
         } else
         {
