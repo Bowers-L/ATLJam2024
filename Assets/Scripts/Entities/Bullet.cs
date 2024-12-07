@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    [SerializeField] private bool isFromPlayer;  //I'm too lazy to make entirely separate script lol.
+    [SerializeField] private bool isFromPlayer;
 
     private Rigidbody2D rb;
     private float acceleration;
@@ -34,15 +34,16 @@ public class Bullet : MonoBehaviour
         rb.velocity = rb.velocity.normalized * (rb.velocity.magnitude + acceleration * Time.deltaTime);
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collider)
     {
-        if (collision.collider.GetComponentInParent<Bullet>() != null)
+        Debug.Log($"Collision With: {collider}");
+        if (collider.GetComponentInParent<Bullet>() != null)
         {
             //Don't do anything on bullet-bullet collisions.
             return;
         }
 
-        PlayerController player = collision.collider.GetComponentInParent<PlayerController>();
+        PlayerController player = collider.GetComponentInParent<PlayerController>();
         //Enemy enemy = collision.collider.GetComponentInParent<Enemy>();
         if (isFromPlayer)
         {
