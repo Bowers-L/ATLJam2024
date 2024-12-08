@@ -7,6 +7,7 @@ using UnityEngine;
 using DG.Tweening;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using Yarn.Unity;
 
 public class PlayerController : MonoBehaviour
 {
@@ -65,8 +66,8 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         ResetData();
-        slowMode.action.Enable();
-        move.action.Enable();
+        //slowMode.action.Enable();
+        //move.action.Enable();
         shoot.action.Enable();
     }
 
@@ -87,6 +88,18 @@ public class PlayerController : MonoBehaviour
         inputEnabled = enable;
     }
 
+    [YarnCommand("disableInput")]
+    public void DisableInput()
+    {
+        SetEnableInputs(false);
+    }
+
+    [YarnCommand("enableInput")]
+    public void EnableInput()
+    {
+        SetEnableInputs(true);
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -94,19 +107,19 @@ public class PlayerController : MonoBehaviour
         if (inputEnabled)
         {
             
-            slowModeActivated = slowMode.action.IsPressed();
-            Vector2 moveDir = GetVelocityFromInput();
+            //slowModeActivated = slowMode.action.IsPressed();
+            //Vector2 moveDir = GetVelocityFromInput();
 
-            if (shoot.action.IsPressed())
+            if (shoot.action.WasPressedThisFrame())
             {
                 Fire();
             }
 
-            Vector2 vel = moveDir * baseSpeed * SpeedMult;
-            rb.velocity = vel;
+            //Vector2 vel = moveDir * baseSpeed * SpeedMult;
+            //rb.velocity = vel;
         } else
         {
-            rb.velocity = Vector2.zero;
+            //rb.velocity = Vector2.zero;
         }
 
         
@@ -203,17 +216,18 @@ public class PlayerController : MonoBehaviour
 
     public void Fire()
     {
-        if (fireTimer <= 0.0f)
-        {
-            //Fire a new bullet
-            GameObject newBulletObj = GameObject.Instantiate(bulletPrefab, bulletSpawnPos.position, Quaternion.identity);
-            Bullet bullet = newBulletObj.GetComponent<Bullet>();
-            bullet.SetVelocity(Vector2.up * bulletSpeed);
-            fireTimer = 1f / fireRate;
-        }
-        else
-        {
-            fireTimer -= Time.deltaTime;
-        }
+        GameObject newBulletObj = GameObject.Instantiate(bulletPrefab, bulletSpawnPos.position, Quaternion.identity);
+        Bullet bullet = newBulletObj.GetComponent<Bullet>();
+        bullet.SetVelocity(Vector2.up * bulletSpeed);
+
+        //if (fireTimer <= 0.0f)
+        //{
+        //    //Fire a new bullet
+        //    fireTimer = 1f / fireRate;
+        //}
+        //else
+        //{
+        //    fireTimer -= Time.deltaTime;
+        //}
     }
 }
