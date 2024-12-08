@@ -79,7 +79,7 @@ public class Bullet : MonoBehaviour
 
             if (player != null)
             {
-                player.Damage();
+                player.Damage(damage);
             }
             Destroy(this.gameObject);
         }

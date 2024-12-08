@@ -26,6 +26,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float bulletSpeed;
     [SerializeField] private float fireRate;
 
+    public int maxHealth = 20;
+
+    private int health;
+
+    public UnityEvent<int> OnMaxHealth;
+    public UnityEvent<int> OnHealthChanged;
+
     [Header("Getting Hit")]
     [SerializeField] private Color hurtColor;
     [SerializeField] private float invincibilityDuration = 0.5f;
@@ -65,6 +72,9 @@ public class PlayerController : MonoBehaviour
 
     public void ResetData()
     {
+        health = maxHealth;
+        OnMaxHealth?.Invoke(maxHealth);
+        OnHealthChanged?.Invoke(health);
         totalHitsTaken = 0;
         totalCollectedEssence = 0;
         fireTimer = 0.0f;
@@ -123,15 +133,21 @@ public class PlayerController : MonoBehaviour
         return moveInput;
     }
 
-    public void Damage()
+    public void Damage(int amount)
     {
-        if (invincibilityTimer <= 0.0f)
-        {
-            totalHitsTaken++;
-            GetComponentInChildren<SpriteFlasher>()?.Flash(hurtColor, invincibilityDuration);
+        health -= amount;
+        health = Mathf.Max(health, 0);
 
-            invincibilityTimer = invincibilityDuration;
+        OnHealthChanged.Invoke(health);
+        if (health <= 0)
+        {
+            OnHealthDepleted();
         }
+    }
+
+    public void OnHealthDepleted()
+    {
+
     }
 
     public void Kill()

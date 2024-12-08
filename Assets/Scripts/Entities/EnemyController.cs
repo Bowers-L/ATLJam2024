@@ -55,7 +55,7 @@ public class EnemyController : MonoBehaviour
         Vector2 spawnPos = (Vector2) transform.position + bulletData.startOffset;
         Vector2 radialDir = bulletData.startOffset.normalized;
         Vector2 stepDir = new Vector2(-radialDir.y, radialDir.x);
-        for (int i = 0; i < bulletData.numBullets / 2; i++)
+        for (int i = 0; i < 1; i++)
         {
             float centeredI = (float) (i - bulletData.numBullets / 2);
             if (bulletData.numBullets % 2 == 0)
