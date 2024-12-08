@@ -54,7 +54,7 @@ public class Bullet : MonoBehaviour
             return;
         }
 
-        Debug.Log($"Bullet Collided: {collider}");
+        //Debug.Log($"Bullet Collided: {collider}");
 
         PlayerController player = collider.GetComponentInParent<PlayerController>();
         EnemyController enemy = collider.GetComponentInParent<EnemyController>();

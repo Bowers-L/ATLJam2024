@@ -12,6 +12,7 @@ public class MarkovStateManager : MonoBehaviour
     private float _stateTimer;
 
     public UnityEvent<float> OnTimerChanged;
+    public UnityEvent<MarkovState> OnStateChanged;
 
     private void Awake()
     {
@@ -35,6 +36,7 @@ public class MarkovStateManager : MonoBehaviour
         {
             //Change States
             _currState = GetNextState();
+            OnStateChanged?.Invoke(_currState);
             _stateTimer = stateTimerDuration;
         } else
         {
@@ -45,10 +47,10 @@ public class MarkovStateManager : MonoBehaviour
 
     public void InitProbabilities()
     {
-        for (int curr_state = 0; curr_state <= _stateProbabilities.Length; curr_state++)
+        for (int curr_state = 0; curr_state < _stateProbabilities.Length; curr_state++)
         {
             int numNextStates = _stateProbabilities[curr_state].Length;
-            for (int next_state = 0; next_state <= numNextStates; next_state++)
+            for (int next_state = 0; next_state < numNextStates; next_state++)
             {
                 _stateProbabilities[curr_state][next_state] = 1.0f / numNextStates;
             }
@@ -73,6 +75,7 @@ public class MarkovStateManager : MonoBehaviour
             }
         }
 
+        Debug.Log($"Next State Is: {nextState}");
         return nextState;
     }
 }
